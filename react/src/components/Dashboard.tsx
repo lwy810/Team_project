@@ -1,16 +1,6 @@
 import React from 'react';
+import EmployeeList from './EmployeeList'
 import { useNavigate } from 'react-router-dom';
-import { Button } from 'react-bootstrap'; 
-
-// import { createClient } from "@supabase/supabase-js";
-
-
-// Supabase 클라이언트 설정 (환경변수에서 로드)
-// const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-// const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-// 실제 Supabase 클라이언트 생성
-// const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -28,13 +18,13 @@ function Dashboard() {
     <div>
       <header>
         <nav>
-          <ul className="nav_bar">
-            <li>
-              <button>주문 발주 ERP</button>
+          <ul className="container">
+            <li className="nav_bar">
+              <button><span>주문 발주 ERP</span></button>
             </li>
-            <li>
-              <button onClick={goToLoginPage} variant="secondary"><span>1.</span><span>로그인</span></button>
-              <button onClick={goToSignupPage} variant="secondary"><span>2.</span><span>회원가입</span></button>
+            <li className="login_bar">
+              <button onClick={goToLoginPage}><span>로그인</span></button>
+              <button onClick={goToSignupPage}><span>회원가입</span></button>
             </li>
           </ul>
         </nav>
@@ -66,8 +56,6 @@ function Dashboard() {
             </li>
           </ul>
           
-
-
         </div>
           
         <div className="main_board">  
@@ -81,6 +69,10 @@ function Dashboard() {
             📊 필요한 테이블: courses (과목), registrations (수강신청)
             <br />
             🔄 실시간 업데이트가 활성화되어 있습니다.
+          </div>
+
+          <div style={{ marginTop: '20px' }}>
+            <EmployeeList />
           </div>
 
         </div>

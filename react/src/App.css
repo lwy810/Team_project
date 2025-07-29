@@ -8,42 +8,41 @@
 /* nav바 */
 nav {
   width: 100vw;
-  height: 60px;
+  height: 70px;
   background: #010306;
   text-align: center;
 }
 
-.nav_bar {
+.container {
   display: flex;
   justify-content: space-between;
   width: 100%;
   height: 100%;
 }
 
-.nav_bar > li {height: 100%;}
-.nav_bar > li:first-child {
-  width:300px; margin-left: 30px;
-}
-.nav_bar > li:nth-child(2) {
-  display: flex; 
-  width:200px; margin-right: 40px; 
-  text-align: right;
-}
-.nav_bar > li > button {margin-right: 10px; background: none; color: white;}
-.nav_bar > li > button:hover > span{color: white;}
-.nav_bar > li > button > span {
-  line-height: 60px; color: #4f5255;
+.container > li {height: 100%;}
+.nav_bar {width:300px;}
+.nav_bar > button {background:#010306;}
+.nav_bar > button > span {
+  font-size: 24px; line-height: 70px; color:white;
   cursor: pointer;
 }
 
-.nav_bar > li > button > span:first-child {margin-right: 10px;} 
-
-h1 {
-  color:white;
-  font-size: 24px;
-  line-height: 60px;
-  text-align: left;
+.login_bar {
+  display: flex; align-items: center;
+  width:200px; margin-right: 25px; 
+  text-align: right;
 }
+.login_bar > button > span, .nav_bar > li > button > span {background: none;}
+.login_bar > button {
+  height: 50px; padding:0 10px; background: white; 
+  border: 3px solid black;
+  transition: all 0.4s ease-in;
+}
+.login_bar > button:first-child {margin-right:10px;}
+.login_bar > button > span {color: #4f5255; transition: all 0.4s ease-in;}
+.login_bar > button:hover {background: skyblue;}
+.login_bar > button:hover > span {color: black;}
 
 /* section */
 section {
@@ -64,15 +63,16 @@ section {
   width: 100%;
   color: white;
 }
-
+#4f5255;
 #main_menu > li {margin-bottom: 30px;}
 .main_menu_title {
   margin-bottom: 10px; 
   font-size:20px; font-weight: 400;
-  color: #4f5255;
+  color: white;
   cursor: pointer;
+  transition: all 0.4s ease-in;
 }
-.main_menu_title:hover {color: white;}
+.main_menu_title:hover {color: #4f5255;}
 
 .sub_menu > li {
   width: 100%;
