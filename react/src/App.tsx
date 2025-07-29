@@ -1,10 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css'; // <-- Bootstrap CSS 임포트
+import 'bootstrap/dist/js/bootstrap.bundle.min'; // <-- Bootstrap JS (Popper 포함) 임포트
 import Login from './employee/Login'; // login 컴포넌트 임포트
 import Signup from './employee/Signup'; // login 컴포넌트 임포트
 import Dashboard from './components/Dashboard'; // login 컴포넌트 임포트
-
 
 // import { createClient } from "@supabase/supabase-js";
 
@@ -22,7 +23,6 @@ function App() {
     <div>
       <Router>
         <Routes>
-          <Route path="/" element={<App />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<Dashboard />} />

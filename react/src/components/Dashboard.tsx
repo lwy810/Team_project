@@ -1,11 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
-import './App.css';
-import Login from './employee/Login'; // login 컴포넌트 임포트
-import Signup from './employee/Signup'; // login 컴포넌트 임포트
-import Dashboard from './components/Dashboard'; // login 컴포넌트 임포트
-
-
+import { useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap'; 
 
 // import { createClient } from "@supabase/supabase-js";
 
@@ -19,10 +14,6 @@ import Dashboard from './components/Dashboard'; // login 컴포넌트 임포트
 
 function Dashboard() {
   const navigate = useNavigate();
-
-  const goToDashboard = () => {
-    navigate('/');
-  };
 
   const goToLoginPage = () => { // <-- 로그인 페이지로 이동하는 함수 추가
     navigate('/login');
@@ -39,11 +30,11 @@ function Dashboard() {
         <nav>
           <ul className="nav_bar">
             <li>
-              <button onClick={goToDashboard}>주문 발주 ERP</button>
+              <button>주문 발주 ERP</button>
             </li>
             <li>
-              <button onClick={goToLoginPage}><span>1.</span><span>로그인</span></button>
-              <button onClick={goToSignupPage}><span>2.</span><span>회원가입</span></button>
+              <button onClick={goToLoginPage} variant="secondary"><span>1.</span><span>로그인</span></button>
+              <button onClick={goToSignupPage} variant="secondary"><span>2.</span><span>회원가입</span></button>
             </li>
           </ul>
         </nav>
