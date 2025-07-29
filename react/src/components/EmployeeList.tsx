@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js'; // Supabase 클라이언트 임포트
 
 // IMPORTANT: Replace with your actual Supabase project URL and Anon Key
