@@ -1,4 +1,3 @@
-import React from 'react';
 import EmployeeList from './EmployeeList'
 import { useNavigate } from 'react-router-dom';
 
