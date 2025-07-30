@@ -84,40 +84,177 @@ function InventoryList() {
   }
 
   return (
-    <div className="container mx-auto p-4 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">재고 목록</h2>
-      {inventory.length === 0 ? (
-        <p className="text-center text-gray-600">등록된 재고가 없습니다.</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">ID</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">재고명</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">구분</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">수량</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">단위 원가</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">생성일</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">갱신일</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {inventory.map((item) => (
-                <tr key={item.inventory_id} className="hover:bg-gray-50">
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{item.inventory_id}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{item.inventory_item_name}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{item.inventory_item_category}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{item.inventory_item_numbers}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{formatCurrency(item.inventory_buy_price)}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{new Date(item.inventory_created_at).toLocaleDateString('ko-KR')}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{new Date(item.inventory_renewed_at).toLocaleDateString('ko-KR')}</td>
+    <div style={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'flex-start',
+      width: '100%',
+      padding: '20px'
+    }}>
+      <div style={{
+        width: '95%',
+        maxWidth: '1400px',
+        backgroundColor: 'white',
+        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+        borderRadius: '12px',
+        padding: '30px'
+      }}>
+        <h2 style={{
+          fontSize: '28px',
+          fontWeight: 'bold',
+          marginBottom: '30px',
+          color: '#1f2937',
+          textAlign: 'center'
+        }}>재고 목록</h2>
+        {inventory.length === 0 ? (
+          <p style={{
+            textAlign: 'center',
+            color: '#6b7280',
+            fontSize: '18px'
+          }}>등록된 재고가 없습니다.</p>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{
+              width: '100%',
+              backgroundColor: 'white',
+              border: '1px solid #e5e7eb',
+              borderRadius: '8px',
+              borderCollapse: 'separate',
+              borderSpacing: '0'
+            }}>
+              <thead style={{ backgroundColor: '#f9fafb' }}>
+                <tr>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    borderBottom: '1px solid #e5e7eb'
+                  }}>ID</th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    borderBottom: '1px solid #e5e7eb'
+                  }}>재고명</th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    borderBottom: '1px solid #e5e7eb'
+                  }}>구분</th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    borderBottom: '1px solid #e5e7eb'
+                  }}>수량</th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    borderBottom: '1px solid #e5e7eb'
+                  }}>단위 원가</th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    borderBottom: '1px solid #e5e7eb'
+                  }}>생성일</th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    borderBottom: '1px solid #e5e7eb'
+                  }}>갱신일</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody>
+                {inventory.map((item, index) => (
+                  <tr key={item.inventory_id} style={{
+                    borderBottom: index < inventory.length - 1 ? '1px solid #f3f4f6' : 'none'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                  >
+                    <td style={{
+                      padding: '16px 20px',
+                      whiteSpace: 'nowrap',
+                      fontSize: '16px',
+                      color: '#111827'
+                    }}>{item.inventory_id}</td>
+                    <td style={{
+                      padding: '16px 20px',
+                      whiteSpace: 'nowrap',
+                      fontSize: '16px',
+                      color: '#111827',
+                      fontWeight: '500'
+                    }}>{item.inventory_item_name}</td>
+                    <td style={{
+                      padding: '16px 20px',
+                      whiteSpace: 'nowrap',
+                      fontSize: '16px',
+                      color: '#111827'
+                    }}>{item.inventory_item_category}</td>
+                    <td style={{
+                      padding: '16px 20px',
+                      whiteSpace: 'nowrap',
+                      fontSize: '16px',
+                      color: '#111827'
+                    }}>{item.inventory_item_numbers}</td>
+                    <td style={{
+                      padding: '16px 20px',
+                      whiteSpace: 'nowrap',
+                      fontSize: '16px',
+                      color: '#111827',
+                      fontWeight: '500'
+                    }}>{formatCurrency(item.inventory_buy_price)}</td>
+                    <td style={{
+                      padding: '16px 20px',
+                      whiteSpace: 'nowrap',
+                      fontSize: '16px',
+                      color: '#111827'
+                    }}>{new Date(item.inventory_created_at).toLocaleDateString('ko-KR')}</td>
+                    <td style={{
+                      padding: '16px 20px',
+                      whiteSpace: 'nowrap',
+                      fontSize: '16px',
+                      color: '#111827'
+                    }}>{new Date(item.inventory_renewed_at).toLocaleDateString('ko-KR')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
