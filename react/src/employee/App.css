@@ -1,0 +1,110 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* nav바 */
+nav {
+  width: 100vw;
+  height: 70px;
+  background: #010306;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+
+.container > li {height: 100%;}
+.nav_bar {width:300px;}
+.nav_bar > button {background:#010306;}
+.nav_bar > button > span {
+  font-size: 24px; line-height: 70px; color:white;
+  cursor: pointer;
+}
+
+.login_bar {
+  display: flex; align-items: center;
+  width:200px; margin-right: 25px; 
+  text-align: right;
+}
+.login_bar > button > span, .nav_bar > li > button > span {background: none;}
+.login_bar > button {
+  height: 50px; padding:0 10px; background: white; 
+  border: 3px solid black;
+  transition: all 0.4s ease-in;
+}
+.login_bar > button:first-child {margin-right:10px;}
+.login_bar > button > span {color: #4f5255; transition: all 0.4s ease-in;}
+.login_bar > button:hover {background: skyblue;}
+.login_bar > button:hover > span {color: black;}
+
+/* section */
+section {
+  display: flex;
+  width: 100vw; height: 100vh;
+}
+
+.side_bar {
+  position:relative;
+  width:300px;
+  height: 100%;
+  background: #212529;
+  z-index: 100;
+}
+
+#main_menu {
+  padding: 30px;
+  width: 100%;
+  color: white;
+}
+
+#main_menu > li {margin-bottom: 30px;}
+.main_menu_title {
+  margin-bottom: 10px; 
+  font-size:20px; font-weight: 400;
+  color: white;
+  cursor: pointer;
+  transition: all 0.4s ease-in;
+}
+.main_menu_title:hover {color: #4f5255;}
+
+.sub_menu > li {
+  width: 100%;
+  margin-bottom: 10px; padding-left: 30px;
+  color: white;
+  transition: all 0.3s ease-in;
+}
+
+.sub_menu > li:hover {
+  color: #4f5255;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  padding-left: 35px;
+}
+
+.sub_menu > li.active {
+  color: #4f5255;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  padding-left: 35px;
+  font-weight: bold;
+}
+
+.main_board {
+  flex-grow: 1; /* 남은 공간을 모두 차지 */
+  height: 100%;
+  padding:20px;
+  background: white;
+}
+
+h2 {
+  color:black;
+  font-size: 30px;
+}
+
