@@ -1,75 +1,73 @@
-import React, { createContext, useState, useContext } from 'react';
-import type { ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-// 1. AuthContext에서 제공할 값들의 타입을 정의합니다.
-//    isLoggedIn: 현재 로그인 상태 (true/false)
-//    login: 사용자가 로그인했을 때 호출할 함수
-//    logout: 사용자가 로그아웃했을 때 호출할 함수
+// Supabase에서 가져올 사용자 데이터의 타입을 정의합니다.
+// 실제 DB 스키마에 맞게 필드를 추가하거나 수정하세요.
+interface User {
+  employee_name: string;
+  employee_email: string;
+  employee_department: string;
+  employee_created_at: Date;
+  // 예: 'admin', 'manager', 'employee'
+  // 기타 필요한 사용자 정보 필드
+}
+
 interface AuthContextType {
   isLoggedIn: boolean;
-  login: () => void;
+  currentUser: User | null; // 현재 로그인된 사용자 정보 (초기값 null)
+  login: (userData: User) => void; // 로그인 시 사용자 데이터를 받도록 수정
   logout: () => void;
 }
 
-// 2. AuthContext를 생성합니다.
-//    초기값은 undefined로 설정하고, useAuth 훅에서 이 값이 undefined가 아닐 때만 사용하도록 강제합니다.
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// 3. AuthProvider 컴포넌트의 props 타입을 정의합니다.
-//    children: AuthProvider로 감싸질 React 자식 요소들
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-// 4. AuthProvider 컴포넌트를 정의합니다.
-//    이 컴포넌트는 모든 자식 컴포넌트에 AuthContext의 값을 제공합니다.
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  // 로그인 상태를 관리하는 state.
-  // 초기값은 localStorage에서 가져와서 페이지를 새로고침해도 상태가 유지되도록 합니다.
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    // 앱이 처음 로드될 때 localStorage에서 'isLoggedIn' 값을 확인합니다.
-    const storedStatus = localStorage.getItem('isLoggedIn');
-    console.log("AuthProvider useState init: storedStatus =", storedStatus);
-    // 'true' 문자열인 경우에만 true를 반환하고, 아니면 false를 반환합니다.
-    return storedStatus === 'true';
+    // 초기 로드 시 localStorage에서 로그인 상태를 가져옴
+    return localStorage.getItem('isLoggedIn') === 'true';
   });
 
-  // login 함수: 로그인 상태를 true로 설정하고 localStorage에도 저장합니다.
-  const login = () => {
-    console.log("AuthContext: login() 함수 호출 시작"); // <-- 추가
-    setIsLoggedIn(true); // React 상태 업데이트 (비동기적) 
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    // 초기 로드 시 localStorage에서 사용자 데이터를 가져옴
+    const storedUser = localStorage.getItem('currentUser');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
+  // 로그인 함수: 사용자 데이터를 받아 상태와 localStorage에 저장
+  const login = (userData: User) => {
+    setIsLoggedIn(true);
+    setCurrentUser(userData);
     localStorage.setItem('isLoggedIn', 'true');
-    console.log("AuthContext: localStorage에 'isLoggedIn' 저장 시도 완료.");
-    console.log("AuthContext: localStorage.getItem('isLoggedIn') 결과:", localStorage.getItem('isLoggedIn')); // 저장 후 즉시 읽기
+    localStorage.setItem('currentUser', JSON.stringify(userData)); // 사용자 데이터를 JSON 문자열로 저장
   };
 
-  // logout 함수: 로그인 상태를 false로 설정하고 localStorage에서도 제거합니다.
+  // 로그아웃 함수: 상태와 localStorage에서 모두 제거
   const logout = () => {
-    console.log("AuthContext: logout() 함수 호출됨"); // <-- 디버깅용 console.log 추가
     setIsLoggedIn(false);
+    setCurrentUser(null);
     localStorage.removeItem('isLoggedIn');
-    console.log("AuthContext: isLoggedIn 값 제거됨", localStorage.getItem('isLoggedIn')); // <-- 디버깅용 console.log 추가
-    console.log("AuthContext: 현재 isLoggedIn 상태:", isLoggedIn); // <-- 추가
+    localStorage.removeItem('currentUser'); // 사용자 데이터도 제거
   };
 
-  // AuthContext.Provider를 통해 isLoggedIn 상태와 login/logout 함수를 자식 컴포넌트에 제공합니다.
+  // isLoggedIn 또는 currentUser가 변경될 때마다 localStorage를 동기화할 필요는 없음.
+  // login/logout 함수에서 직접 처리하므로 useEffect는 필요 없음.
+  // 만약 isLoggedIn만 localStorage에 저장한다면, Dashboard의 useEffect 로직을 살려야 합니다.
+  // 여기서는 currentUser까지 Context에서 직접 관리하므로 Dashboard의 useEffect는 제거하거나 수정해야 합니다.
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, currentUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// 5. useAuth 커스텀 훅을 정의합니다.
-//    이 훅을 사용하면 어떤 컴포넌트에서든 AuthContext의 값에 쉽게 접근할 수 있습니다.
 export const useAuth = () => {
-  const context = useContext(AuthContext); // React의 useContext 훅을 사용하여 AuthContext의 현재 값을 가져옵니다.
-
-  // context가 undefined라면 (즉, AuthProvider로 감싸지지 않았다면) 에러를 발생시킵니다.
+  const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
-
-  // AuthContext에서 제공하는 값(isLoggedIn, login, logout)을 반환합니다.
   return context;
 };

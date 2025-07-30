@@ -1,11 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { createClient } from "@supabase/supabase-js";
 
-function Signup() {
+function Mypage() {
   const navigate = useNavigate();
 
-  const goToLoginPage = () => { // <-- 로그인 페이지로 이동하는 함수 추가
+  const goToDashboard = () => {
     navigate('/');
+  };
+
+  const goToLoginPage = () => { // <-- 로그인 페이지로 이동하는 함수 추가
+    navigate('/login');
 
   const VITE_SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
   const VITE_SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -21,17 +25,18 @@ function Signup() {
         <nav>
           <ul className="container">
             <li className="nav_bar">
-              <span>주문 발주 ERP</span>
+              <button onClick={goToDashboard}><span>주문 발주 ERP</span></button>
             </li>
             <li className="login_bar">
-              <button onClick={goToLoginPage}><span>로그인</span></button>
+              <button onClick={goToDashboard}><span>뒤로</span></button>
+              <button onClick={goToLoginPage}><span>로그아웃</span></button>
             </li>
           </ul>
         </nav>
       </header>
       <section>
         <div>
-          <h2>회원가입 페이지입니다..</h2>
+          <h2>마이 페이지입니다.</h2>
         </div>
       </section>
     </div>
@@ -39,4 +44,4 @@ function Signup() {
   );
 };
 
-export default Signup;
+export default Mypage;

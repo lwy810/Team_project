@@ -1,11 +1,11 @@
-import EmployeeList from './EmployeeList'
-import EmployeeSearch from './EmployeeSearch'
-import AttendanceManagement from './AttendanceManagement'
-import EmployeePermission from './EmployeePermission'
-import InventoryDashboard from './InventoryDashboard'
+
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import QRAttendance from './QRAttendance';
+import AttendanceManagement from '../employee/AttendanceManagement' // 출결 관리 컴포넌트 임포트
+import EmployeeSearch from '../employee/EmployeeSearch' // 직원 검색 컴포넌트 임포트
+import EmployeePermission from '../employee/EmployeePermission'  // 권한 관리 컴포넌트 임포트
+import QRAttendance from '../employee/QRAttendance';  // QR 출결 컴포넌트 임포트
+
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -117,18 +117,6 @@ function Dashboard() {
             {activeMenu === 'dashboard' && (
               <>
                 <h2>Dash Board</h2>
-                <div>
-                  <strong>📋 Supabase 데이터베이스 연결됨:</strong>
-                  <br />
-                  ✅ 실제 Supabase 데이터베이스에 연결되어 있습니다.
-                  <br />
-                  📊 필요한 테이블: employee (직원), attendance (출결)
-                  <br />
-                  🔄 실시간 업데이트가 활성화되어 있습니다.
-                </div>
-                <div style={{ marginTop: '20px' }}>
-                  <EmployeeList />
-                </div>
               </>
             )}
 
@@ -161,6 +149,10 @@ function Dashboard() {
                 }}
               />
             )}
+
+
+
+
           </div>
         </section>
       </div>

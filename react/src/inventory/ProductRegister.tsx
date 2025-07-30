@@ -160,7 +160,7 @@ function ProductRegister({ onBack, onSuccess }: ProductRegisterProps) {
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4b5563'}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#6b7280'}
           >
-            ← 뒤로가기
+            이전 페이지
           </button>
         </div>
 
