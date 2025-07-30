@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { createClient } from "@supabase/supabase-js";
 
-function Signup() {
+function Mypage() {
   const navigate = useNavigate();
 
   const goToDashboard = () => {
@@ -16,12 +16,7 @@ function Signup() {
 
   // Supabase 클라이언트 초기화
   const supabase = createClient(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY); 
-  };
-
-
-
-
-
+};
 
   return (
     <>
@@ -33,15 +28,15 @@ function Signup() {
               <button onClick={goToDashboard}><span>주문 발주 ERP</span></button>
             </li>
             <li className="login_bar">
-              <button onClick={goToLoginPage}><span>로그인</span></button>
-              <button><span>회원가입</span></button>
+              <button onClick={goToDashboard}><span>뒤로</span></button>
+              <button onClick={goToLoginPage}><span>로그아웃</span></button>
             </li>
           </ul>
         </nav>
       </header>
       <section>
         <div>
-          <h2>회원 등록 페이지입니다.</h2>
+          <h2>마이 페이지입니다.</h2>
         </div>
       </section>
     </div>
@@ -49,4 +44,4 @@ function Signup() {
   );
 };
 
-export default Signup;
+export default Mypage;
