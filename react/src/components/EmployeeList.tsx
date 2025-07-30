@@ -3,11 +3,12 @@ import { createClient } from '@supabase/supabase-js'; // Supabase 클라이언�
 
 // IMPORTANT: Replace with your actual Supabase project URL and Anon Key
 // Supabase 프로젝트 설정에서 API 키를 확인하여 여기에 입력하세요.
-const SUPABASE_URL = 'https://zodjdbspobmdqyrunqdw.supabase.co'; // 예: 'https://abcdefg1234.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpvZGpkYnNwb2JtZHF5cnVucWR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MDMzNTYsImV4cCI6MjA2OTM3OTM1Nn0.s9L9g5-ft0a0LYKccErDt4LkH0neQ3rQwb7r5UCH8s4'; // 예: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+
+const VITE_SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const VITE_SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 // Supabase 클라이언트 초기화
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = createClient(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY);
 
 // Employee 데이터의 타입 정의 (테이블 스키마에 맞춰)
 interface Employee {
