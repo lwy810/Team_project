@@ -63,7 +63,7 @@ section {
   width: 100%;
   color: white;
 }
-#4f5255;
+
 #main_menu > li {margin-bottom: 30px;}
 .main_menu_title {
   margin-bottom: 10px; 
@@ -79,7 +79,6 @@ section {
   margin-bottom: 10px; padding-left: 30px;
   color: white;
 }
-
 
 .main_board {
   flex-grow: 1; /* 남은 공간을 모두 차지 */
