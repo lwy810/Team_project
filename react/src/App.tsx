@@ -1,18 +1,8 @@
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import './App.css';
-import Login from './employee/Login'; // login 컴포넌트 임포트
-import Signup from './employee/Signup'; // login 컴포넌트 임포트
-import Dashboard from './components/Dashboard'; // login 컴포넌트 임포트
-
-// import { createClient } from "@supabase/supabase-js";
-
-
-// Supabase 클라이언트 설정 (환경변수에서 로드)
-// const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-// const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-// 실제 Supabase 클라이언트 생성
-// const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+import Login from './components/Login'; // login 컴포넌트 임포트
+import Signup from './components/Signup'; // Signup 컴포넌트 임포트
+import Dashboard from './components/Dashboard'; // dashboard 컴포넌트 임포트
 
 function App() {
   return (
