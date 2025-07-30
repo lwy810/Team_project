@@ -21,11 +21,9 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault(); // 폼의 기본 제출 동작(페이지 새로고침) 방지
 
-  const 
-
-  const supabase = createClient(
-    process.env.REACT_APP_SUPABASE_URL as string, 
-    process.env.REACT_APP_SUPABASE_ANON_KEY as string);
+    const supabase = createClient(
+      import.meta.env.VITE_SUPABASE_URL as string, 
+      import.meta.env.VITE_SUPABASE_ANON_KEY as string);
     
   const { data, error } = await supabase.auth.signInWithPassword({
     email: email,
