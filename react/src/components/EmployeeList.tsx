@@ -14,11 +14,8 @@ interface Employee {
   employee_id: number;
   employee_name: string;
   employee_pwd: string; // 실제 앱에서는 비밀번호를 클라이언트에서 직접 다루지 않아야 합니다.
-  employee_phone: string;
   employee_email: string;
-  employee_birth: string;
   employee_department: string;
-  employee_grade: string;
   employee_created_at: string;
   employee_renewed_at: string;
 }
@@ -97,8 +94,6 @@ function EmployeeList() {
                 <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">부서</th>
                 <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">직급</th>
                 <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">이메일</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">전화번호</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">생년월일</th>
                 <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">등록일</th>
               </tr>
             </thead>
@@ -108,10 +103,7 @@ function EmployeeList() {
                   <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{employee.employee_id}</td>
                   <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{employee.employee_name}</td>
                   <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{employee.employee_department}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{employee.employee_grade}</td>
                   <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{employee.employee_email}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{employee.employee_phone}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{employee.employee_birth}</td>
                   <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{new Date(employee.employee_created_at).toLocaleDateString()}</td>
                 </tr>
               ))}
