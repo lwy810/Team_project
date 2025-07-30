@@ -8,16 +8,15 @@ const VITE_SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
 // Supabase 클라이언트 초기화
 const supabase = createClient(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY);
 
-// Inventory 데이터의 타입 정의 (데이터베이스 스키마에 맞춰)
+// Inventory 데이터의 타입 정의 (실제 데이터베이스 스키마에 맞춰)
 interface Inventory {
   inventory_id: number;
-  item_name: string;
-  category: string;
-  quantity: number;
-  unit_price: number;
-  supplier: string;
-  last_updated: string;
-  created_at: string;
+  inventory_item_name: string;
+  inventory_item_category: string;
+  inventory_item_numbers: string;
+  inventory_buy_price: string;
+  inventory_created_at: string;
+  inventory_renewed_at: string;
 }
 
 function InventoryList() {
@@ -63,8 +62,9 @@ function InventoryList() {
   }, []); // 빈 의존성 배열: 컴포넌트가 처음 마운트될 때 한 번만 실행
 
   // 한국 원화 포맷팅 함수
-  const formatCurrency = (amount: number): string => {
-    return `₩${amount.toLocaleString('ko-KR')}`;
+  const formatCurrency = (amount: string): string => {
+    const numAmount = parseInt(amount);
+    return `₩${numAmount.toLocaleString('ko-KR')}`;
   };
 
   if (loading) {
@@ -94,24 +94,24 @@ function InventoryList() {
             <thead className="bg-gray-50">
               <tr>
                 <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">ID</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">제품명</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">카테고리</th>
+                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">재고명</th>
+                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">구분</th>
                 <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">수량</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">단가</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">공급업체</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">최종 업데이트</th>
+                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">단위 원가</th>
+                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">생성일</th>
+                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">갱신일</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {inventory.map((item) => (
                 <tr key={item.inventory_id} className="hover:bg-gray-50">
                   <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{item.inventory_id}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{item.item_name}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{item.category}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{item.quantity}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{formatCurrency(item.unit_price)}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{item.supplier}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{new Date(item.last_updated).toLocaleDateString('ko-KR')}</td>
+                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{item.inventory_item_name}</td>
+                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{item.inventory_item_category}</td>
+                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{item.inventory_item_numbers}</td>
+                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{formatCurrency(item.inventory_buy_price)}</td>
+                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{new Date(item.inventory_created_at).toLocaleDateString('ko-KR')}</td>
+                  <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-900">{new Date(item.inventory_renewed_at).toLocaleDateString('ko-KR')}</td>
                 </tr>
               ))}
             </tbody>
