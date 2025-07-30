@@ -60,16 +60,7 @@ function Dashboard() {
         <div className="main_board">  
           <h2>Dash Board</h2>
 
-          <div>
-            <strong>📋 Supabase 데이터베이스 연결됨:</strong>
-            <br />
-            ✅ 실제 Supabase 데이터베이스에 연결되어 있습니다.
-            <br />
-            📊 필요한 테이블: courses (과목), registrations (수강신청)
-            <br />
-            🔄 실시간 업데이트가 활성화되어 있습니다.
-          </div>
-
+   
           <div style={{ marginTop: '20px' }}>
             <EmployeeList />
           </div>
