@@ -1,14 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-
-// import { createClient } from "@supabase/supabase-js";
-
-
-// Supabase 클라이언트 설정 (환경변수에서 로드)
-// const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-// const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-// 실제 Supabase 클라이언트 생성
-// const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+import { createClient } from "@supabase/supabase-js";
 
 function Signup() {
   const navigate = useNavigate();
@@ -19,7 +10,17 @@ function Signup() {
 
   const goToLoginPage = () => { // <-- 로그인 페이지로 이동하는 함수 추가
     navigate('/login');
+
+  const VITE_SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+  const VITE_SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+  // Supabase 클라이언트 초기화
+  const supabase = createClient(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY); 
   };
+
+
+
+
 
 
   return (
