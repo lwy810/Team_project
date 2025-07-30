@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext'
 import { createClient } from '@supabase/supabase-js'; // Supabase 클라이언트 임포트
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -57,6 +59,7 @@ function Login() {
       if (data.employee_pwd === password) {
         // 로그인 성공
         console.log('로그인 성공:', data);
+        login();
         // 로그인 성공 후 대시보드 또는 다른 페이지로 이동
         // 여기에서 사용자 정보를 전역 상태 (Context API, Redux 등) 또는 로컬 스토리지에 저장하여
         // 로그인 상태를 유지할 수 있습니다.
