@@ -1,0 +1,227 @@
+/* 기본 설정 */
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* 헤더 스타일 */
+.signup-header {
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.signup-logo-section p {
+  background: none;
+  font-size: 24px; font-weight: bold;
+  text-align: center;
+  color: #4CAF50; /* Primary color */
+  cursor: pointer;
+}
+
+.signup-nav-list {
+  font-size: 18px;
+  color: #555;
+}
+
+/* 메인 컨텐츠 및 카드 스타일 */
+.signup-main-content {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.signup-card {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px; /* Adjust max-width for signup form */
+  text-align: center;
+}
+
+.signup-title {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+/* 폼 그룹 스타일 */
+.signup-form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.signup-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+  font-size: 14px;
+}
+
+/* 아이콘 컨테이너 (input, select 공통 적용) */
+.signup-input-with-icon,
+.signup-select-with-icon {
+  position: relative;
+}
+
+/* 아이콘 스타일 및 위치 조정 (input, select 공통 적용) */
+.signup-input-with-icon .signup-icon,
+.signup-select-with-icon .signup-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  font-size: 18px;
+  pointer-events: none; /* 아이콘 클릭 방지 */
+  z-index: 1; /* 아이콘이 input/select 위에 오도록 */
+}
+
+/* Input 필드 스타일 */
+.signup-form input {
+  width: 100%; /* 아이콘 겹침을 위해 넓이 100%로 설정 */
+  padding: 12px 15px 12px 45px; /* 왼쪽 패딩을 늘려 아이콘이 가려지지 않도록 함 */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #333;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box; /* padding이 width에 포함되도록 함 */
+}
+
+.signup-form input:focus {
+  border-color: #4CAF50;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+/* Select 박스 스타일 */
+.signup-form select {
+  width: 100%; /* 아이콘 겹침을 위해 넓이 100%로 설정 */
+  padding: 12px 15px 12px 45px; /* 왼쪽 패딩을 늘려 아이콘이 가려지지 않도록 함 */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #333;
+  transition: border-color 0.3s ease;
+  -webkit-appearance: none; /* 기본 select 화살표 숨기기 (크로스 브라우징) */
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #fff; /* 배경색 지정 */
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292%22%20height%3D%22292%22%3E%3Cpath%20fill%3D%22%23AAAAAA%22%20d%3D%22M287%2069L146%20208%205%2069h282z%22%2F%3E%3C%2Fsvg%3E'); /* 사용자 정의 화살표 */
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 12px; /* 화살표 크기 */
+  box-sizing: border-box; /* padding이 width에 포함되도록 함 */
+}
+
+.signup-form select:focus {
+  border-color: #4CAF50;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+.signup_select_department option:first-child {
+    color: #999; /* "선택하세요" 옵션 색상 연하게 */
+}
+.signup_select_department:invalid {
+    color: #999; /* 선택되지 않았을 때 글자색 연하게 */
+}
+
+
+/* 버튼 스타일 */
+.signup-button, .signup-go-to-login-button {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 20px;
+}
+
+.signup-button {
+  background-color: #4CAF50; /* Primary color */
+  color: #fff;
+}
+
+.signup-button:hover:not(:disabled) {
+  background-color: #45a049;
+  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+}
+
+.signup-button:disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
+}
+
+.signup-go-to-login-button {
+  background-color: #6c757d; /* Secondary color for login navigation */
+  color: #fff;
+  margin-top: 10px; /* 약간의 간격 */
+}
+
+.signup-go-to-login-button:hover {
+  background-color: #5a6268;
+}
+
+/* 메시지 스타일 */
+.signup-error-message, .signup-success-message {
+  margin-bottom: 20px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  text-align: left;
+}
+
+.signup-error-message {
+  background-color: #ffe0e0;
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+}
+
+.signup-success-message {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #2e7d32;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 600px) {
+  .signup-header {
+    padding: 10px 20px;
+  }
+  .signup-card {
+    padding: 30px 20px;
+    margin: 0 15px;
+  }
+  .signup-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  .signup-form input,
+  .signup-form select {
+    padding: 10px 15px 10px 40px;
+    font-size: 15px;
+  }
+  .signup-button, .signup-go-to-login-button {
+    padding: 12px 15px;
+    font-size: 16px;
+  }
+}
