@@ -78,9 +78,11 @@ function Dashboard() {
           <nav>
             <ul className="container">
               <li className="nav_bar">
-                <button><span>주문 발주 ERP</span></button>
+                <button><span>편의점 ERP</span></button>
               </li>
               <li className="login_bar">
+                <span>{currentUser?.employee_department} 팀</span>
+                <span>{currentUser?.employee_name} 님 안녕하세요</span>
                 {currentUser && (// currentUser가 있을 때만 마이페이지 버튼 표시
                   <button onClick={goToMyPage}> 
                   {/* currentUser?.employee_department를 안전하게 사용 */}
@@ -98,7 +100,7 @@ function Dashboard() {
             <ul id="main_menu">
               {( is_admin || hr_manager ) && (
                 <li>
-                  <p className="main_menu_title">■ 직원</p>
+                  <p className="main_menu_title">■ 인사 관리</p>
                   <ul className="sub_menu">
                     <li>
                       <button className={activeMenu === 'search' ? 'active' : ''} onClick={() => handleMenuClick('search')}>
@@ -116,7 +118,7 @@ function Dashboard() {
 
               {( is_admin || inven_manager ) && (
                 <li>
-                  <p className="main_menu_title">■ 재고</p>
+                  <p className="main_menu_title">■ 재고 관리</p>
                   <ul className="sub_menu">
                     <li>
                       <button className={activeMenu === 'inventory_list' ? 'active' : ''} onClick={() => handleMenuClick('inventory_list')}>
@@ -134,7 +136,7 @@ function Dashboard() {
 
               {(is_admin || order_manager) && (
                 <li>
-                  <p className="main_menu_title">■ 발주</p>
+                  <p className="main_menu_title">■ 발주 관리</p>
                   <ul className="sub_menu">
                     <li>
                       <button className={activeMenu === 'orders' ? 'active' : ''} onClick={() => handleMenuClick('orders')}>
@@ -170,7 +172,7 @@ function Dashboard() {
           <div className="main_board">
             {activeMenu === 'dashboard' && (
               <>
-                <h2>Dash Board</h2>
+                <InventoryDashboard />
               </>
             )}
 
@@ -222,6 +224,7 @@ function Dashboard() {
           </div>
         </section>
       </div>
+
     </>
   );
 };
