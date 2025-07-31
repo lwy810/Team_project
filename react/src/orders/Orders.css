@@ -65,7 +65,6 @@ body {
   font-weight: 500;
 }
 
-/* 메인 컨텐츠 */
 .app-main {
   padding: 32px 24px;
   max-width: 1200px;
@@ -160,7 +159,6 @@ body {
   box-shadow: none;
 }
 
-/* 발주 상태 확인 섹션 */
 .status-section {
   background: white;
   border-radius: 8px;
@@ -450,7 +448,6 @@ body {
   }
 }
 
-/* 포커스 스타일 개선 */
 .tab-button:focus,
 .submit-button:focus,
 .refresh-button:focus,
