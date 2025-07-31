@@ -2,10 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import QRCode from 'qrcode';
 
-const SUPABASE_URL = 'https://zodjdbspobmdqyrunqdw.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpvZGpkYnNwb2JtZHF5cnVucWR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MDMzNTYsImV4cCI6MjA2OTM3OTM1Nn0.s9L9g5-ft0a0LYKccErDt4LkH0neQ3rQwb7r5UCH8s4';
+const VITE_SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const VITE_SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = createClient(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY);
 
 interface Employee {
   employee_id: number;
