@@ -113,7 +113,7 @@ function Orders() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>발주 관리 시스템</h1>
+        <h1>발주 신청 / 확인</h1>
         <nav className="tab-nav">
           <button 
             className={`tab-button ${activeTab === 'create' ? 'active' : ''}`}
