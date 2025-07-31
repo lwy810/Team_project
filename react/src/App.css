@@ -30,7 +30,7 @@ nav {
 
 .login_bar {
   display: flex; align-items: center;
-  width:200px; margin-right: 25px; 
+  width:500px; margin-right: 25px; 
   text-align: right;
 }
 .login_bar > button > span, .nav_bar > li > button > span {background: none;}
@@ -43,6 +43,11 @@ nav {
 .login_bar > button > span {color: #4f5255; transition: all 0.4s ease-in;}
 .login_bar > button:hover {background: skyblue;}
 .login_bar > button:hover > span {color: black;}
+.login_bar > span {
+  margin-right:10px; padding: 10px; 
+  background: skyblue; 
+}
+
 
 /* section */
 section {
