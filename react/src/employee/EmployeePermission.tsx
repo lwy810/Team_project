@@ -9,7 +9,6 @@ const supabase = createClient(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY);
 interface Employee {
   employee_no: number;
   employee_name: string;
-  employee_id: string;
   employee_department: string;
   employee_email: string;
 }
@@ -94,7 +93,7 @@ function EmployeePermission({ currentUserRole, currentUserId }: EmployeePermissi
       try {
         const { data, error } = await supabase
           .from('employee')
-          .select('employee_no, employee_name, employee_id, employee_department, employee_email')
+          .select('employee_no, employee_name, employee_department, employee_email')
           .order('employee_name');
 
         if (data && !error) {

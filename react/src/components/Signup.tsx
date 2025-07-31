@@ -107,15 +107,11 @@ function Signup() {
 
   return (
     <div className="signup-container">
-      {/* Header */}
+    
       <header className="signup-header">
-        <div className="signup-logo-section" onClick={goToLoginPage}>
-          {/* 로고나 앱 이름 추가 */}
-          <p>편의점 ERP</p>
-        </div>
         <nav>
           <div className="signup-nav-list">
-            {/* 필요시 네비게이션 아이템 추가 */}
+              <p className="signup-logo-section">편의점 ERP</p>
           </div>
         </nav>
       </header>

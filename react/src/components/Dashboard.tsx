@@ -7,7 +7,7 @@ import { useEffect } from 'react'; // 초기 로그인 상태를 로컬 스토�
 import AttendanceManagement from '../employee/AttendanceManagement' // 출결 관리 컴포넌트 임포트
 import EmployeeSearch from '../employee/EmployeeSearch' // 직원 검색 컴포넌트 임포트
 import EmployeePermission from '../employee/EmployeePermission'  // 권한 관리 컴포넌트 임포트
-import QRAttendance from '../employee/QRAttendance';  // QR 출결 컴포넌트 임포트
+import SimpleQRAttendance from '../employee/SimpleQRAttendance';  // QR 출결 컴포넌트 임포트
 import InventoryDashboard from '../employee/InventoryDashboard';  // 메인 대시보드 컴포넌트 임포트
 import InventoryList from '../inventory/InventoryList' // 재고 현황 컴포넌트 임포트
 import ProductRegister from '../inventory/ProductRegister' // 제품 등록 컴포넌트 임포트
@@ -81,8 +81,8 @@ function Dashboard() {
                 <button><span>편의점 ERP</span></button>
               </li>
               <li className="login_bar">
-                <span>{currentUser?.employee_department} 팀</span>
-                <span>{currentUser?.employee_name} 님 안녕하세요</span>
+                <p><span>{currentUser?.employee_department} 팀</span></p>
+                <p><span>{currentUser?.employee_name} 님 안녕하세요</span></p>
                 {currentUser && (// currentUser가 있을 때만 마이페이지 버튼 표시
                   <button onClick={goToMyPage}> 
                   {/* currentUser?.employee_department를 안전하게 사용 */}
@@ -102,6 +102,11 @@ function Dashboard() {
                 <li>
                   <p className="main_menu_title">■ 인사 관리</p>
                   <ul className="sub_menu">
+                    <li>
+                      <button className={activeMenu === 'attendance' ? 'active' : ''} onClick={() => handleMenuClick('attendance')}>
+                        - 출결 관리
+                      </button>
+                    </li>
                     <li>
                       <button className={activeMenu === 'search' ? 'active' : ''} onClick={() => handleMenuClick('search')}>
                         - 검색 관리
@@ -150,20 +155,17 @@ function Dashboard() {
               <li>
                 <p className="main_menu_title">■ 대시보드</p>
                 <ul className="sub_menu">
-                  <li
-                    className={activeMenu === 'dashboard' ? 'active' : ''}
-                    onClick={() => handleMenuClick('dashboard')}> - 메인 대시보드 
-                  </li>
                   <li>
                     <button className={activeMenu === 'qr_attendance' ? 'active' : ''} onClick={() => handleMenuClick('qr_attendance')}>
                       - QR 출결
                     </button>
                   </li>
-                  <li>
-                    <button className={activeMenu === 'attendance' ? 'active' : ''} onClick={() => handleMenuClick('attendance')}>
-                      - 출결 관리
+                  {/* <li>
+                    <button className={activeMenu === 'dashboard' ? 'active' : ''} onClick={() => handleMenuClick('dashboard')}>
+                      - 재고 현황 대시보드
                     </button>
-                  </li>
+                  </li> */}
+
                 </ul>
               </li>
             </ul>
@@ -196,9 +198,8 @@ function Dashboard() {
             )}
 
             {activeMenu === 'qr_attendance' && (
-              <QRAttendance 
+              <SimpleQRAttendance 
                 currentUser={{
-                  employee_id: 1,
                   employee_name: "관리자",
                   employee_department: "IT팀",
                   employee_email: "admin@company.com"
@@ -220,6 +221,10 @@ function Dashboard() {
             {activeMenu === 'orders' && (
               <Orders />
             )}
+{/* 
+            {activeMenu === 'dashboard' && (
+              <Dashboard />
+            )} */}
 
           </div>
         </section>

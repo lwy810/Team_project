@@ -23,13 +23,13 @@ body {
 
 /* --- Header Styles --- */
 .login-header {
+    height: 80px;
     width: 100%;
     position: absolute;
     top: 0;
     left: 0;
     background-color: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -53,11 +53,18 @@ body {
 }
 
 .login-nav-list {
+    height: 100px;
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     gap: 15px;
+}
+
+.login-nav-list {justify-content: center;}
+.login-nav-list > p {
+    font-size: 30px; line-height: 70px;
+    color:white
 }
 
 .login-nav-button {
@@ -104,14 +111,15 @@ body {
 .login-main-content {
     display: flex;
     justify-content: center;
-    align-items: center;
     min-height: calc(100vh - 80px); /* 헤더 높이만큼 빼기 */
     padding-top: 80px; /* 헤더 아래로 내용 이동 */
 }
 
 .login-card {
     background-color: #ffffff;
+    height: 620px;
     border-radius: 16px;
+    margin-top: 200px;
     padding: 50px 40px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
     max-width: 450px;
@@ -213,7 +221,7 @@ body {
 
 /* Login Button */
 .login-button, .signup-button {
-    width: 100%;
+    width: 100%; height: 60px;
     padding: 18px 25px;
     background-color: #2ecc71; /* 초록색 버튼 */
     color: white;
@@ -245,11 +253,7 @@ body {
     background-color: #1eace4;
     box-shadow: 0 10px 25px rgba(7, 77, 230, 0.4);
 }
-.login-nav-list {justify-content: center;}
-.login-nav-list > p {
-    font-size: 30px; line-height: 70px;
-    color:white
-}
+
 
 
 /* --- 반응형 디자인 (선택 사항) --- */

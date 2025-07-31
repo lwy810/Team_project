@@ -46,7 +46,8 @@ function InventoryDashboard() {
         const { data, error: supabaseError } = await supabase
           .from('products')
           .select('*')
-          .order('id', { ascending: true });
+          .order('id', { ascending: true })
+          .limit(3);
 
         if (supabaseError) {
           throw new Error(supabaseError.message);
@@ -100,7 +101,8 @@ function InventoryDashboard() {
 
   return (
     <div style={{
-      minHeight: '100vh',
+      height: '100vw',
+      minHeight: '100vw',
       background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
       padding: '2rem'
     }}>
@@ -293,7 +295,6 @@ function InventoryDashboard() {
             ) : error ? (
               <div style={{
                 textAlign: 'center',
-                padding: '3rem',
                 color: '#ef4444'
               }}>
                 <div style={{ fontSize: '4rem', marginBottom: '1rem', opacity: 0.7 }}>⚠️</div>

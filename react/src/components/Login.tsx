@@ -20,10 +20,6 @@ function Login() {
 
   const supabase = createClient(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY);
 
-  const goToDashboard = () => {
-    navigate('/dashboard');
-  };
-
   const goToSignupPage = () => {
     navigate('/signup');
   };
@@ -76,12 +72,9 @@ function Login() {
     <div className="login-container">
       {/* Header */}
       <header className="login-header">
-        <div className="login-logo-section" onClick={goToDashboard}>
-
-        </div>
         <nav>
           <div className="login-nav-list">
-            <p>주문 발주 ERP</p>
+            <p>편의점 ERP</p>
           </div>
         </nav>
       </header>

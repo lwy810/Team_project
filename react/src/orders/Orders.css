@@ -14,7 +14,7 @@ body {
 }
 
 .app-header {
-  background: #4A90E2;
+  background: #e2f0ff;
   color: white;
   padding: 2rem;
   text-align: center;
@@ -71,9 +71,10 @@ body {
 
 
 .app-main {
-  padding: 3rem 2rem;
-  max-width: 1000px;
-  margin: 0 auto;
+  justify-content: center;
+
+  width: 100%;
+  
 }
 
 .app-main:has(.status-section) {
@@ -82,6 +83,7 @@ body {
 }
 
 .create-order-section {
+  width: 600px; margin: 100px 0 0 500px;
   background: white;
   padding: 3rem;
   border-radius: 20px;

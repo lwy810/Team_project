@@ -8,7 +8,7 @@ const supabase = createClient(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY);
 
 interface Employee {
   employee_no: number;
-  employee_name: string;_
+  employee_name: string;
   employee_department: string;
 }
 
@@ -33,7 +33,7 @@ function AttendanceManagement() {
     const fetchEmployees = async () => {
       const { data, error } = await supabase
         .from('employee')
-        .select('employee_no, employee_name, employee_department')
+        .select('employee_no, employee_name, employee_id, employee_department')
         .order('employee_name');
       
       if (data && !error) {
@@ -47,167 +47,19 @@ function AttendanceManagement() {
     fetchAttendanceData();
   }, [selectedDate, employees]);
 
-  // SimpleQRAttendance에서 발생하는 출결 업데이트 이벤트 감지
-  useEffect(() => {
-    const handleAttendanceUpdate = (event: CustomEvent) => {
-      console.log('출결 업데이트 감지:', event.detail);
-      // 출결 데이터 새로고침
-      fetchAttendanceData();
-    };
-
-    window.addEventListener('attendanceUpdated', handleAttendanceUpdate as EventListener);
-    
-    return () => {
-      window.removeEventListener('attendanceUpdated', handleAttendanceUpdate as EventListener);
-    };
-  }, [selectedDate, employees]);
-
   const fetchAttendanceData = async () => {
     setLoading(true);
+    const dummyAttendances: Attendance[] = employees.map(emp => ({
+      employee_no: emp.employee_no,
+      employee_name: emp.employee_name,
+      date: selectedDate,
+      check_in_time: Math.random() > 0.1 ? '09:00' : '',
+      check_out_time: Math.random() > 0.1 ? '18:00' : '',
+      status: Math.random() > 0.8 ? 'absent' : Math.random() > 0.7 ? 'late' : 'present',
+      work_hours: Math.random() > 0.1 ? 8 : 0
+    }));
     
-    try {
-      // 실제 데이터베이스에서 출결 데이터 가져오기
-      const { data: attendanceData, error } = await supabase
-        .from('attendance')
-        .select('*')
-        .eq('attendance_date', selectedDate);
-
-      // 로컬 스토리지에서 모든 출결 데이터 확인
-      const localAttendanceData: any[] = [];
-      
-      // 로컬 스토리지의 모든 키를 확인하여 출결 데이터 찾기
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith(`attendance_${selectedDate}_`)) {
-          const attendanceData = localStorage.getItem(key);
-          if (attendanceData) {
-            try {
-              const parsed = JSON.parse(attendanceData);
-              const email = key.split('_')[2]; // attendance_날짜_이메일 형식에서 이메일 추출
-              
-              if (parsed.checkin) {
-                localAttendanceData.push({
-                  employee_name: parsed.checkin.employee_name,
-                  employee_email: email,
-                  attendance_date: selectedDate,
-                  check_in_time: parsed.checkin.timestamp,
-                  check_out_time: parsed.checkout ? parsed.checkout.timestamp : null,
-                  status: parsed.checkout ? '퇴근' : '출근'
-                });
-              }
-            } catch (e) {
-              console.error('로컬 스토리지 데이터 파싱 오류:', e);
-            }
-          }
-        }
-      });
-
-      // 실제 데이터와 로컬 데이터를 합쳐서 처리
-      const allAttendanceData = [...(attendanceData || []), ...localAttendanceData];
-      
-      if (error && localAttendanceData.length === 0) {
-        console.error('출결 데이터 가져오기 실패:', error);
-        // 오류 시 더미 데이터 사용
-        const dummyAttendances: Attendance[] = employees.map(emp => ({
-          employee_no: emp.employee_no,
-          employee_name: emp.employee_name,
-          date: selectedDate,
-          check_in_time: Math.random() > 0.1 ? '09:00' : '',
-          check_out_time: Math.random() > 0.1 ? '18:00' : '',
-          status: Math.random() > 0.8 ? 'absent' : Math.random() > 0.7 ? 'late' : 'present',
-          work_hours: Math.random() > 0.1 ? 8 : 0
-        }));
-        setAttendances(dummyAttendances);
-      } else {
-        // 로컬 스토리지에 출결 데이터가 있는 경우, 직원 데이터베이스가 없어도 표시
-        if (localAttendanceData.length > 0 && employees.length === 0) {
-          // 직원 데이터베이스가 없는 경우, 로컬 스토리지 데이터만으로 출결 정보 생성
-          const localAttendances: Attendance[] = localAttendanceData.map((data, index) => {
-            const status = data.status === '출근' ? 'present' : 
-                          data.status === '퇴근' ? 'present' :
-                          data.status === '지각' ? 'late' :
-                          data.status === '조퇴' ? 'early_leave' : 'absent';
-            
-            // 근무 시간 계산
-            let workHours = 0;
-            if (data.check_in_time && data.check_out_time) {
-              const checkIn = new Date(`2000-01-01 ${data.check_in_time}`);
-              const checkOut = new Date(`2000-01-01 ${data.check_out_time}`);
-              workHours = (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60);
-            }
-            
-            return {
-              employee_no: index + 1,
-              employee_name: data.employee_name,
-              date: selectedDate,
-              check_in_time: data.check_in_time || '',
-              check_out_time: data.check_out_time || '',
-              status: status,
-              work_hours: workHours
-            };
-          });
-          
-          setAttendances(localAttendances);
-        } else {
-          // 직원 데이터베이스가 있는 경우, 기존 로직 사용
-          const realAttendances: Attendance[] = employees.map(emp => {
-            const empAttendance = allAttendanceData.find(a => a.employee_name === emp.employee_name);
-            
-            if (empAttendance) {
-              // 출결 데이터가 있는 경우
-              const status = empAttendance.status === '출근' ? 'present' : 
-                            empAttendance.status === '퇴근' ? 'present' :
-                            empAttendance.status === '지각' ? 'late' :
-                            empAttendance.status === '조퇴' ? 'early_leave' : 'absent';
-              
-              // 근무 시간 계산
-              let workHours = 0;
-              if (empAttendance.check_in_time && empAttendance.check_out_time) {
-                const checkIn = new Date(`2000-01-01 ${empAttendance.check_in_time}`);
-                const checkOut = new Date(`2000-01-01 ${empAttendance.check_out_time}`);
-                workHours = (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60);
-              }
-              
-              return {
-                employee_no: emp.employee_no,
-                employee_name: emp.employee_name,
-                date: selectedDate,
-                check_in_time: empAttendance.check_in_time || '',
-                check_out_time: empAttendance.check_out_time || '',
-                status: status,
-                work_hours: workHours
-              };
-            } else {
-              // 출결 데이터가 없는 경우 (결근)
-              return {
-                employee_no: emp.employee_no,
-                employee_name: emp.employee_name,
-                date: selectedDate,
-                check_in_time: '',
-                check_out_time: '',
-                status: 'absent',
-                work_hours: 0
-              };
-            }
-          });
-          
-          setAttendances(realAttendances);
-        }
-      }
-    } catch (err) {
-      console.error('출결 데이터 가져오기 오류:', err);
-      // 오류 시 더미 데이터 사용
-      const dummyAttendances: Attendance[] = employees.map(emp => ({
-        employee_no: emp.employee_no,
-        employee_name: emp.employee_name,
-        date: selectedDate,
-        check_in_time: Math.random() > 0.1 ? '09:00' : '',
-        check_out_time: Math.random() > 0.1 ? '18:00' : '',
-        status: Math.random() > 0.8 ? 'absent' : Math.random() > 0.7 ? 'late' : 'present',
-        work_hours: Math.random() > 0.1 ? 8 : 0
-      }));
-      setAttendances(dummyAttendances);
-    }
-    
+    setAttendances(dummyAttendances);
     setLoading(false);
   };
 
@@ -600,31 +452,18 @@ function AttendanceManagement() {
                     <div style={styles.timeItem}>
                       <span style={styles.timeLabel}>근무시간</span>
                       <span style={styles.timeValue}>
-                        {attendance.work_hours > 0 && !isNaN(attendance.work_hours) 
-                          ? `${attendance.work_hours.toFixed(1)}시간` 
-                          : '-'}
+                        {attendance.work_hours > 0 ? `${attendance.work_hours}시간` : '-'}
                       </span>
                     </div>
                     <div style={styles.timeItem}>
-                      <span style={styles.timeLabel}>상태</span>
+                      <span style={styles.timeLabel}>진행률</span>
                       <span style={styles.timeValue}>
-                        {(() => {
-                          if (!attendance.work_hours || attendance.work_hours <= 0 || isNaN(attendance.work_hours)) {
-                            return attendance.check_in_time ? '🟡 근무중' : '⚪ 미출근';
-                          }
-                          
-                          const progress = (attendance.work_hours / 8) * 100;
-                          if (progress >= 100) return '🟢 완료';
-                          if (progress >= 75) return '🔵 거의완료';
-                          if (progress >= 50) return '🟡 진행중';
-                          if (progress >= 25) return '🟠 시작';
-                          return '🔴 초기';
-                        })()}
+                        {Math.round((attendance.work_hours / 8) * 100)}%
                       </span>
                     </div>
                   </div>
 
-                  {attendance.work_hours > 0 && !isNaN(attendance.work_hours) && (
+                  {attendance.work_hours > 0 && (
                     <div style={styles.progressSection}>
                       <div style={styles.progressHeader}>
                         <span>근무 진행률</span>

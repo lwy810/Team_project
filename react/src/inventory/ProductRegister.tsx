@@ -13,6 +13,22 @@ interface ProductRegisterProps {
 }
 
 function ProductRegister({ onBack, onSuccess }: ProductRegisterProps) {
+  // 카테고리 옵션들
+  const categories = [
+    '인스턴트',
+    '유제품',
+    '육류',
+    '해산물',
+    '채소',
+    '과일',
+    '곡물',
+    '음료',
+    '조미료',
+    '냉동식품',
+    '베이커리',
+    '기타'
+  ];
+
   const [formData, setFormData] = useState({
     inventory_item_name: '',
     inventory_item_category: '',
@@ -28,6 +44,14 @@ function ProductRegister({ onBack, onSuccess }: ProductRegisterProps) {
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  // 카테고리 선택 함수
+  const handleCategorySelect = (category: string) => {
+    setFormData(prev => ({
+      ...prev,
+      inventory_item_category: category
     }));
   };
 
@@ -79,18 +103,20 @@ function ProductRegister({ onBack, onSuccess }: ProductRegisterProps) {
       <div style={{
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
+        // alignItems: 'center',
         width: '100%',
         padding: '40px'
       }}>
         <div style={{
           backgroundColor: 'white',
           borderRadius: '16px',
+          marginTop: '80px',
           padding: '60px 40px',
           boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
           textAlign: 'center',
           maxWidth: '500px',
-          width: '100%'
+          width: '100%',
+          height:'500px'
         }}>
           <div style={{
             fontSize: '80px',
@@ -221,29 +247,60 @@ function ProductRegister({ onBack, onSuccess }: ProductRegisterProps) {
                 fontSize: '16px',
                 fontWeight: '600',
                 color: '#374151',
-                marginBottom: '8px'
+                marginBottom: '12px'
               }}>
                 구분 <span style={{ color: '#ef4444' }}>*</span>
               </label>
-              <input
-                type="text"
-                name="inventory_item_category"
-                value={formData.inventory_item_category}
-                onChange={handleInputChange}
-                placeholder="예: 인스턴트"
-                required
-                style={{
-                  width: '100%',
-                  padding: '16px',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '8px',
-                  fontSize: '16px',
-                  transition: 'border-color 0.2s ease',
-                  outline: 'none'
-                }}
-                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
-              />
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+                gap: '12px',
+                marginBottom: '8px'
+              }}>
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    type="button"
+                    onClick={() => handleCategorySelect(category)}
+                    style={{
+                      padding: '12px 16px',
+                      backgroundColor: formData.inventory_item_category === category ? '#3b82f6' : '#f8fafc',
+                      color: formData.inventory_item_category === category ? 'white' : '#374151',
+                      border: formData.inventory_item_category === category ? '2px solid #3b82f6' : '2px solid #e5e7eb',
+                      borderRadius: '8px',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      textAlign: 'center'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (formData.inventory_item_category !== category) {
+                        e.currentTarget.style.backgroundColor = '#f1f5f9';
+                        e.currentTarget.style.borderColor = '#cbd5e1';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (formData.inventory_item_category !== category) {
+                        e.currentTarget.style.backgroundColor = '#f8fafc';
+                        e.currentTarget.style.borderColor = '#e5e7eb';
+                      }
+                    }}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+              {formData.inventory_item_category && (
+                <p style={{
+                  fontSize: '14px',
+                  color: '#10b981',
+                  marginTop: '8px',
+                  fontWeight: '500'
+                }}>
+                  ✓ 선택됨: {formData.inventory_item_category}
+                </p>
+              )}
             </div>
 
             {/* 2열 그리드 */}

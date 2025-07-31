@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-const VITE_SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
-const VITE_SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+const SUPABASE_URL = 'https://zodjdbspobmdqyrunqdw.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpvZGpkYnNwb2JtZHF5cnVucWR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MDMzNTYsImV4cCI6MjA2OTM3OTM1Nn0.s9L9g5-ft0a0LYKccErDt4LkH0neQ3rQwb7r5UCH8s4';
 
-const supabase = createClient(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 interface Employee {
   employee_no: number;
-  employee_name: string;_
+  employee_name: string;
+  employee_id: string;
   employee_department: string;
 }
 
@@ -19,7 +20,7 @@ interface Attendance {
   date: string;
   check_in_time: string;
   check_out_time: string;
-  status: 'present' | 'absent' | 'late' | 'early_leave';
+  status: 'present' | 'completed' | 'absent' | 'late' | 'early_leave';
   work_hours: number;
 }
 
@@ -33,9 +34,9 @@ function AttendanceManagement() {
     const fetchEmployees = async () => {
       const { data, error } = await supabase
         .from('employee')
-        .select('employee_no, employee_name, employee_department')
+        .select('employee_no, employee_name, employee_id, employee_department')
         .order('employee_name');
-      
+
       if (data && !error) {
         setEmployees(data);
       }
@@ -56,7 +57,7 @@ function AttendanceManagement() {
     };
 
     window.addEventListener('attendanceUpdated', handleAttendanceUpdate as EventListener);
-    
+
     return () => {
       window.removeEventListener('attendanceUpdated', handleAttendanceUpdate as EventListener);
     };
@@ -64,7 +65,7 @@ function AttendanceManagement() {
 
   const fetchAttendanceData = async () => {
     setLoading(true);
-    
+
     try {
       // 실제 데이터베이스에서 출결 데이터 가져오기
       const { data: attendanceData, error } = await supabase
@@ -74,7 +75,7 @@ function AttendanceManagement() {
 
       // 로컬 스토리지에서 모든 출결 데이터 확인
       const localAttendanceData: any[] = [];
-      
+
       // 로컬 스토리지의 모든 키를 확인하여 출결 데이터 찾기
       Object.keys(localStorage).forEach(key => {
         if (key.startsWith(`attendance_${selectedDate}_`)) {
@@ -83,7 +84,7 @@ function AttendanceManagement() {
             try {
               const parsed = JSON.parse(attendanceData);
               const email = key.split('_')[2]; // attendance_날짜_이메일 형식에서 이메일 추출
-              
+
               if (parsed.checkin) {
                 localAttendanceData.push({
                   employee_name: parsed.checkin.employee_name,
@@ -103,7 +104,7 @@ function AttendanceManagement() {
 
       // 실제 데이터와 로컬 데이터를 합쳐서 처리
       const allAttendanceData = [...(attendanceData || []), ...localAttendanceData];
-      
+
       if (error && localAttendanceData.length === 0) {
         console.error('출결 데이터 가져오기 실패:', error);
         // 오류 시 더미 데이터 사용
@@ -122,19 +123,51 @@ function AttendanceManagement() {
         if (localAttendanceData.length > 0 && employees.length === 0) {
           // 직원 데이터베이스가 없는 경우, 로컬 스토리지 데이터만으로 출결 정보 생성
           const localAttendances: Attendance[] = localAttendanceData.map((data, index) => {
-            const status = data.status === '출근' ? 'present' : 
-                          data.status === '퇴근' ? 'present' :
-                          data.status === '지각' ? 'late' :
-                          data.status === '조퇴' ? 'early_leave' : 'absent';
-            
-            // 근무 시간 계산
+            const status = data.status === '출근' && !data.check_out_time ? 'present' :
+              data.status === '퇴근' || data.check_out_time ? 'completed' :
+                data.status === '지각' ? 'late' :
+                  data.status === '조퇴' ? 'early_leave' : 'absent';
+
+            // 근무 시간 계산 (시간 형식 개선)
             let workHours = 0;
             if (data.check_in_time && data.check_out_time) {
-              const checkIn = new Date(`2000-01-01 ${data.check_in_time}`);
-              const checkOut = new Date(`2000-01-01 ${data.check_out_time}`);
-              workHours = (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60);
+              try {
+                // 시간 형식을 24시간 형식으로 변환
+                const parseTime = (timeStr: string) => {
+                  // "오후 2:16:09" 형식을 "14:16:09" 형식으로 변환
+                  if (timeStr.includes('오후') || timeStr.includes('오전')) {
+                    const isAfternoon = timeStr.includes('오후');
+                    const timeOnly = timeStr.replace(/오전|오후/g, '').trim();
+                    const [hours, minutes, seconds] = timeOnly.split(':').map(Number);
+                    let hour24 = hours;
+
+                    if (isAfternoon && hours !== 12) {
+                      hour24 = hours + 12;
+                    } else if (!isAfternoon && hours === 12) {
+                      hour24 = 0;
+                    }
+
+                    return `${hour24.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                  }
+                  return timeStr;
+                };
+
+                const checkInTime24 = parseTime(data.check_in_time);
+                const checkOutTime24 = parseTime(data.check_out_time);
+
+                const checkIn = new Date(`2000-01-01 ${checkInTime24}`);
+                const checkOut = new Date(`2000-01-01 ${checkOutTime24}`);
+
+                if (!isNaN(checkIn.getTime()) && !isNaN(checkOut.getTime())) {
+                  workHours = (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60);
+                  if (workHours < 0) workHours = 0; // 음수 방지
+                }
+              } catch (e) {
+                console.error('시간 파싱 오류:', e, data.check_in_time, data.check_out_time);
+                workHours = 0;
+              }
             }
-            
+
             return {
               employee_no: index + 1,
               employee_name: data.employee_name,
@@ -145,28 +178,60 @@ function AttendanceManagement() {
               work_hours: workHours
             };
           });
-          
+
           setAttendances(localAttendances);
         } else {
           // 직원 데이터베이스가 있는 경우, 기존 로직 사용
           const realAttendances: Attendance[] = employees.map(emp => {
             const empAttendance = allAttendanceData.find(a => a.employee_name === emp.employee_name);
-            
+
             if (empAttendance) {
               // 출결 데이터가 있는 경우
-              const status = empAttendance.status === '출근' ? 'present' : 
-                            empAttendance.status === '퇴근' ? 'present' :
-                            empAttendance.status === '지각' ? 'late' :
-                            empAttendance.status === '조퇴' ? 'early_leave' : 'absent';
-              
-              // 근무 시간 계산
+              const status = empAttendance.status === '출근' && !empAttendance.check_out_time ? 'present' :
+                empAttendance.status === '퇴근' || empAttendance.check_out_time ? 'completed' :
+                  empAttendance.status === '지각' ? 'late' :
+                    empAttendance.status === '조퇴' ? 'early_leave' : 'absent';
+
+              // 근무 시간 계산 (시간 형식 개선)
               let workHours = 0;
               if (empAttendance.check_in_time && empAttendance.check_out_time) {
-                const checkIn = new Date(`2000-01-01 ${empAttendance.check_in_time}`);
-                const checkOut = new Date(`2000-01-01 ${empAttendance.check_out_time}`);
-                workHours = (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60);
+                try {
+                  // 시간 형식을 24시간 형식으로 변환
+                  const parseTime = (timeStr: string) => {
+                    // "오후 2:16:09" 형식을 "14:16:09" 형식으로 변환
+                    if (timeStr.includes('오후') || timeStr.includes('오전')) {
+                      const isAfternoon = timeStr.includes('오후');
+                      const timeOnly = timeStr.replace(/오전|오후/g, '').trim();
+                      const [hours, minutes, seconds] = timeOnly.split(':').map(Number);
+                      let hour24 = hours;
+
+                      if (isAfternoon && hours !== 12) {
+                        hour24 = hours + 12;
+                      } else if (!isAfternoon && hours === 12) {
+                        hour24 = 0;
+                      }
+
+                      return `${hour24.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                    return timeStr;
+                  };
+
+                  const checkInTime24 = parseTime(empAttendance.check_in_time);
+                  const checkOutTime24 = parseTime(empAttendance.check_out_time);
+
+                  const checkIn = new Date(`2000-01-01 ${checkInTime24}`);
+                  const checkOut = new Date(`2000-01-01 ${checkOutTime24}`);
+
+                  if (!isNaN(checkIn.getTime()) && !isNaN(checkOut.getTime())) {
+                    workHours = (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60);
+                    if (workHours < 0) workHours = 0; // 음수 방지
+                  }
+                } catch (e) {
+                  console.error('시간 파싱 오류:', e, empAttendance.check_in_time, empAttendance.check_out_time);
+                  workHours = 0;
+                }
               }
-              
+
               return {
                 employee_no: emp.employee_no,
                 employee_name: emp.employee_name,
@@ -189,7 +254,7 @@ function AttendanceManagement() {
               };
             }
           });
-          
+
           setAttendances(realAttendances);
         }
       }
@@ -207,13 +272,14 @@ function AttendanceManagement() {
       }));
       setAttendances(dummyAttendances);
     }
-    
+
     setLoading(false);
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
       case 'present': return '출근';
+      case 'completed': return '완료';
       case 'absent': return '결근';
       case 'late': return '지각';
       case 'early_leave': return '조퇴';
@@ -223,10 +289,11 @@ function AttendanceManagement() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'present': return { bg: '#dcfce7', color: '#166534' };
-      case 'absent': return { bg: '#fecaca', color: '#991b1b' };
-      case 'late': return { bg: '#fef3c7', color: '#92400e' };
-      case 'early_leave': return { bg: '#fed7aa', color: '#9a3412' };
+      case 'present': return { bg: '#fef3c7', color: '#92400e' }; // 근무중 - 노란색
+      case 'completed': return { bg: '#dbeafe', color: '#1e40af' }; // 퇴근 - 파란색
+      case 'absent': return { bg: '#fecaca', color: '#991b1b' }; // 결근 - 빨간색
+      case 'late': return { bg: '#fed7aa', color: '#9a3412' }; // 지각 - 주황색
+      case 'early_leave': return { bg: '#fed7aa', color: '#9a3412' }; // 조퇴 - 주황색
       default: return { bg: '#f1f5f9', color: '#475569' };
     }
   };
@@ -490,33 +557,33 @@ function AttendanceManagement() {
 
       <div style={styles.statsGrid}>
         {[
-          { 
-            title: '출근', 
+          {
+            title: '출근',
             count: attendances.filter(a => a.status === 'present').length,
             color: '#10b981',
             bg: '#dcfce7',
             icon: '✅'
           },
-          { 
-            title: '결근', 
+          {
+            title: '퇴근',
+            count: attendances.filter(a => a.status === 'completed').length,
+            color: '#3b82f6',
+            bg: '#dbeafe',
+            icon: '🏠'
+          },
+          {
+            title: '결근',
             count: attendances.filter(a => a.status === 'absent').length,
             color: '#ef4444',
             bg: '#fecaca',
             icon: '❌'
           },
-          { 
-            title: '지각', 
+          {
+            title: '지각',
             count: attendances.filter(a => a.status === 'late').length,
             color: '#f59e0b',
             bg: '#fef3c7',
             icon: '⏰'
-          },
-          { 
-            title: '총 직원', 
-            count: employees.length,
-            color: '#3b82f6',
-            bg: '#dbeafe',
-            icon: '👥'
           }
         ].map((stat, index) => (
           <div
@@ -535,7 +602,7 @@ function AttendanceManagement() {
                 <div style={styles.statTitle}>{stat.title}</div>
                 <div style={{ ...styles.statNumber, color: stat.color }}>{stat.count}</div>
                 <div style={styles.statPercent}>
-                  {employees.length > 0 ? Math.round((stat.count / employees.length) * 100) : 0}% 
+                  {employees.length > 0 ? Math.round((stat.count / employees.length) * 100) : 0}%
                   {index < 3 ? ` ${stat.title}률` : ' 전체'}
                 </div>
               </div>
@@ -600,8 +667,8 @@ function AttendanceManagement() {
                     <div style={styles.timeItem}>
                       <span style={styles.timeLabel}>근무시간</span>
                       <span style={styles.timeValue}>
-                        {attendance.work_hours > 0 && !isNaN(attendance.work_hours) 
-                          ? `${attendance.work_hours.toFixed(1)}시간` 
+                        {attendance.work_hours > 0 && !isNaN(attendance.work_hours)
+                          ? `${attendance.work_hours.toFixed(1)}시간`
                           : '-'}
                       </span>
                     </div>
@@ -609,37 +676,24 @@ function AttendanceManagement() {
                       <span style={styles.timeLabel}>상태</span>
                       <span style={styles.timeValue}>
                         {(() => {
-                          if (!attendance.work_hours || attendance.work_hours <= 0 || isNaN(attendance.work_hours)) {
-                            return attendance.check_in_time ? '🟡 근무중' : '⚪ 미출근';
+                          // 출근하지 않은 경우
+                          if (!attendance.check_in_time) {
+                            return '⚪ 미출근';
                           }
-                          
-                          const progress = (attendance.work_hours / 8) * 100;
-                          if (progress >= 100) return '🟢 완료';
-                          if (progress >= 75) return '🔵 거의완료';
-                          if (progress >= 50) return '🟡 진행중';
-                          if (progress >= 25) return '🟠 시작';
-                          return '🔴 초기';
+
+                          // 출근했지만 퇴근하지 않은 경우
+                          if (!attendance.check_out_time) {
+                            return '🟡 근무중';
+                          }
+
+                          // 출근과 퇴근을 모두 한 경우
+                          return '🟢 퇴근';
                         })()}
                       </span>
                     </div>
                   </div>
 
-                  {attendance.work_hours > 0 && !isNaN(attendance.work_hours) && (
-                    <div style={styles.progressSection}>
-                      <div style={styles.progressHeader}>
-                        <span>근무 진행률</span>
-                        <span>{Math.round((attendance.work_hours / 8) * 100)}%</span>
-                      </div>
-                      <div style={styles.progressBar}>
-                        <div 
-                          style={{
-                            ...styles.progressFill,
-                            width: `${Math.min((attendance.work_hours / 8) * 100, 100)}%`
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-                  )}
+
                 </div>
               );
             })}

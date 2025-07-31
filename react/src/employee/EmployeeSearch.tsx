@@ -508,7 +508,21 @@ function EmployeeSearch() {
       {/* 검색 필터 섹션 */}
       <div style={styles.searchSection}>
         <h2 style={styles.sectionTitle}>🎯 검색 필터</h2>
-        
+        <div style={styles.formGroup}>
+          <button
+            onClick={resetSearch}
+            style={styles.resetButton}
+            onMouseEnter={(e) => {
+              Object.assign(e.currentTarget.style, styles.resetButtonHover);
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          >
+            🔄 초기화
+          </button>
+        </div>
         <div style={styles.searchGrid}>
           <div style={styles.formGroup}>
             <label style={styles.label}>직원명</label>
@@ -580,21 +594,7 @@ function EmployeeSearch() {
             />
           </div>
 
-          <div style={styles.formGroup}>
-            <button
-              onClick={resetSearch}
-              style={styles.resetButton}
-              onMouseEnter={(e) => {
-                Object.assign(e.currentTarget.style, styles.resetButtonHover);
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              🔄 초기화
-            </button>
-          </div>
+
         </div>
       </div>
 

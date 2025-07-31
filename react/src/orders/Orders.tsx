@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
+import './Orders.css';
 import { supabase } from './supabaseClient';
 import type { Order, NewOrder } from './supabaseClient';
 
